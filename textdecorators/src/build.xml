@@ -1,0 +1,58 @@
+<project name="textdecorators" default="compile_all" basedir="..">
+
+  <property name="BUILD.compiler"       value="modern"/>
+  <property name="src"                  value="src"/>
+  <property name="BUILD"                value="src/BUILD"/>
+  <property name="classes"              value="${BUILD}/classes"/>
+
+  <target name="all" depends="compile_all"/>
+
+  <target name="compile_all"
+          depends="textdecorators"/>
+
+  <target name="clean">
+       <delete dir="${BUILD}"/>
+  </target>
+
+  <!-- Prepare target directories -->
+  <target name="prepare">
+        <mkdir dir="${BUILD}"/>
+        <mkdir dir="${classes}"/>
+  </target>
+
+ <target name="jar">
+        <mkdir dir="${BUILD}/jar"/>
+        <jar destfile="${BUILD}/jar/textdecorators.jar" basedir="${BUILD}/classes">
+            <manifest>
+                <attribute name="Main-Class" value="textdecorators.driver.Driver"/>
+            </manifest>
+        </jar>
+    </target>
+
+  <!-- ** means all subdirectories as well -->
+  <!-- * means all files in the current directory -->
+  <!-- for just java files use *.java -->
+
+  <target name="textdecorators" depends="prepare">
+    <javac includeantruntime="false" srcdir="${src}"
+	           includes="textdecorators/**"
+           excludes="**/package.html"
+           destdir="${classes}"
+           classpath="${classes}"
+           debug="on"
+           optimize="on"
+           deprecation="off"/>
+  </target>
+
+<target name="run" depends="jar">
+        <java jar="${BUILD}/jar/textdecorators.jar"  fork="true">
+			<arg value="${input}"/> <!-- input file -->
+			<arg value="${misspelled}"/> <!-- Misspelled words file -->
+    		<arg value="${keywords}"/> <!-- Keywords file -->
+    		<arg value="${output}"/> <!-- Output file -->
+    		<arg value="${debug}"/> <!-- debug value -->
+        </java>	
+    </target>
+
+</project>
+
